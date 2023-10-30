@@ -4,7 +4,7 @@ for amenity objects """
 from api.v1.views import app_views
 from models import storage
 from flask import request, jsonify, abort
-from models.amenities import Amenity
+from models.amenity import Amenity
 
 
 @app_views.route(
@@ -13,7 +13,7 @@ from models.amenities import Amenity
 def get_amenity_objects():
     """Retrieves the list of all State objects"""
     if request.method == "GET":
-        am = storage.get(Amenity)
+        am = storage.all(Amenity)
         if am is None:
             abort(404)
         amenity = [amen.to_dict() for amen in am.values()]
@@ -32,9 +32,11 @@ def get_amenity_objects():
 
 
 @app_views.route(
-    "/cities/<city_id>", methods=["GET", "PUT", "DELETE"], strict_slashes=False
+    "/amenities/<amenity_id>",
+    methods=["GET", "PUT", "DELETE"],
+    strict_slashes=False
 )
-def city_actions(city_id):
+def amenity_actions(amenity_id):
     """Performs actions on state objects"""
     if request.method == "GET":
         # retrieve state object
