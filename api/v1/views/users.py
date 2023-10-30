@@ -4,7 +4,7 @@ for User objects """
 from api.v1.views import app_views
 from models import storage
 from flask import request, jsonify, abort
-from models.amenity import Amenity
+from models.user import User
 
 
 @app_views.route(
@@ -13,7 +13,7 @@ from models.amenity import Amenity
 def get_user_objects():
     """Retrieves the list of all User objects"""
     if request.method == "GET":
-        us = storage.all('User')
+        us = storage.all(User)
         if us is None:
             abort(404)
         user = [user.to_dict() for user in us.values()]
@@ -27,7 +27,7 @@ def get_user_objects():
         elif "email" not in req:
             return jsonify({"error": "Missing email"}), 400
         elif "password" not in req:
-            return jsonify({"error": "Missing email"}), 400
+            return jsonify({"error": "Missing password"}), 400
         new = User(**req)
         new.save()
         return jsonify(new.to_dict()), 201
@@ -42,14 +42,14 @@ def user_actions(user_id):
     """Performs actions on user objects"""
     if request.method == "GET":
         # retrieve state object
-        user = storage.get('User', user_id)
+        user = storage.get(User, user_id)
         if user is None:
             abort(404)
         return jsonify(user.to_dict())
 
     elif request.method == "DELETE":
         # delete a state
-        user = storage.get('User', user_id)
+        user = storage.get(User, user_id)
         if user is None:
             abort(404)
         user.delete()
