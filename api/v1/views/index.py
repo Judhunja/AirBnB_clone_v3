@@ -12,13 +12,14 @@ def json_return():
 @app_views.route('/stats')
 def return_count():
     """ Retrieves the number of each object by type """
-    classes = {}
-    classes["amenities"] = storage.count("Amenity")
-    classes["cities"] = storage.count("City")
-    classes["places"] = storage.count("Place")
-    classes["reviews"] = storage.count("Review")
-    classes["states"] = storage.count("State")
-    classes["users"] = storage.count("User")
+    classes = {
+            "amenities": storage.count("Amenity"),
+            "cities": storage.count("City"),
+            "places": storage.count("Place"),
+            "reviews": storage.count("Review"),
+            "states": storage.count("State"),
+            "users": storage.count("User")
+            }
     return jsonify(classes)
 
 
