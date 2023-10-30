@@ -1,4 +1,6 @@
 #!/usr/bin/python3
+""" Handles 404 errors and closes the app after complete
+request """
 from os import getenv
 from models import storage
 from api.v1.views import app_views

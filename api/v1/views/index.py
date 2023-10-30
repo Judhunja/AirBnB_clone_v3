@@ -9,6 +9,7 @@ def json_return():
     """ Returns a JSON {"status": "OK"} """
     return jsonify({"status": "OK"})
 
+
 @app_views.route('/stats')
 def return_count():
     """ Retrieves the number of each object by type """
@@ -21,7 +22,3 @@ def return_count():
             "users": storage.count("User")
             }
     return jsonify(classes)
-
-
-if __name__ == "__main__":
-    app.run(host='0.0.0.0', port=5000)

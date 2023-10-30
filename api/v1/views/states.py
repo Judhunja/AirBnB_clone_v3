@@ -3,26 +3,28 @@
 for State objects """
 from api.v1.views import app_views
 from models import storage
-from flask import request, jsonify
+from flask import request, jsonify, abort
+from models.state import State
 
 
-@app_views.route("/states")
+@app_views.route("/states", methods=['GET'], strict_slashes=False)
 def get_objects():
     """Retrieves the list of all State objects"""
     st = storage.all("State")
-    state = [state.to_dict() for state in st.values]
+    state = [state.to_dict() for state in st.values()]
     return jsonify(state)
 
 
 @app_views.route("/states/<state_id>",
-                 methods=["GET", "POST", "PUT", "DELETE"])
-def get_state(id):
-    """Retrieves a state object"""
+                 methods=["GET", "POST", "PUT", "DELETE"],
+                 strict_slashes=False)
+def state_actions(state_id):
+    """ Performs actions on state objects """
     if request.method == "GET":
         # retrieve state object
-        state = storage.get(State, id)
+        state = storage.get(State, state_id)
         if state is None:
-            return jsonify({"error": "Not found"}), 404
+            abort(404)
         return jsonify(state.to_dict())
 
     elif request.method == "POST":
@@ -31,14 +33,14 @@ def get_state(id):
         if not req:
             return jsonify({"error": "Not a JSON"}), 400
         if "name" not in req:
-            return jsonify({"Missing name"}), 400
+            return jsonify({"error": "Missing name"}), 400
         new = State(**req)
         new.save()
         return jsonify(new.to_dict()), 201
 
     elif request.method == "PUT":
         # update state
-        state = storage.get(State, id)
+        state = storage.get(State, state_id)
         if state is None:
             return jsonify({"error": "Not found"}), 404
         req = request.get_json()
